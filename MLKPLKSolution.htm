@@ -1,0 +1,325 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+<LINK REL="StyleSheet" HREF="style.css" type="text/css">
+
+<body>
+<!-- Input Page Content Here -->
+
+<!-- ********** Header 1 ******************** -->
+<p></p><font class="subhead1">
+C++ Memory Tutorial
+</font>
+<!-- ********** Header 2 ******************** -->
+<p></p><font class="subhead2">
+Overview
+</font>
+<p>
+A good number of the bugs that have recently been found in our code have been due to 
+memory leaks.  This tutorial will go over textbook and actual examples of how to find and 
+fix a memory leak.  Memory leaks are the current number-one cause of server malfunction;
+it is imperative that every developer using C++ learn how to do this and apply it to everything 
+they write.</p>
+<ul>
+  <a href="#Label" class = "subnav">
+  &raquo; A Textbook Example</a><br>
+  <a href="#Vector" class = "subnav">
+  &raquo; Vector Data Structures</a><br>
+  <a href="#GetItem" class = "subnav">
+  &raquo; Leaving Pointers and Data (with GetItem)</a><br>
+  <a href="#GetUser" class = "subnav">
+  &raquo; Overwriting Pointers and Data (with GetUser)</a><br>
+  <a href="#Leak" class = "subnav">
+  &raquo; The LeakDiag Tool</a><br>
+  <a href="#Tech" class = "subnav">
+  &raquo; Technical Contact</a><br>
+</ul>
+<!-- ********** Header 2 ******************** -->
+<p></p><hr><font class="subhead2">
+<a name="Label">A Textbook Example</a></font>
+<p>The textbook example is something like this - a pointer is created at the beginning of 
+the function and that pointer is deleted at the end of the function. However, in the middle of the function, 
+some flow control checks for an exit condition, halting the function if an error occurs.  This check doesn't 
+delete anything and the code returns without deleting the pointer.  This is a common error when modifying 
+large pieces of code.
+<br><br>
+The following is a code segment with a memory/pointer leak:<code><pre>
+{
+<br>    ebay_ostrstream *pEnvXML = new ebay_ostrstream(); <font color="blue">//remember to delete the pointer before exiting this scope</font>
+<br>    *pEnvXML &lt;&lt; &quot;this is something or another&quot;;
+<br>    char *temp = pEnvXML->str();
+<br>    //...
+<br>    someFunctionOrAnother(temp);
+<br>    //...
+<br>    mpUser = mpUsers->GetUser(pUserId, false, false);
+<br>    if (!mpUser)
+<br>    {
+<br>        MyeBayCommonErrorXML(ER_MYEBAYALL_NO_USER, 
+                             XSLMyEbayAll, 
+                             pXSLStyle, 
+                             partnerId, 
+                             siteId); <font color="red">//does not call delete pEnvXML, here is the leak</font>
+<br>        CleanUp();
+<br>        return;
+<br>    }
+<br>	//...
+<br>    pEnvXML->rdbuf()->freeze(false); <font color="red">//freeze is called too late</font>
+<br>    delete pEnvXML; <font color="blue">//delete is called at the end of the function.</font>
+<br>    CleanUp();
+<br>}
+</pre></code>
+<p>You can use a local stack variable instead of a pointer to avoid using delete at all.  It is not always necessary to use 
+a pointer.  Most abuses of the "new" operator occur when a local variable should be used instead.  
+<br><br>Here is a correct version of the same function:</p> <code><pre>
+{
+<br>    <font color="green">ebay_ostrstream EnvXML; </font><font color="blue">//initialize a variable, not a pointer</font>
+<br>    EnvXML &lt;&lt; &quot;this is something or another&quot;;
+<br>    char *temp = EnvXML.str();
+<br>    //...
+<br>    someFunctionOrAnother(temp);
+<br>    <font color="green">EnvXML.rdbuf->freeze(false); </font><font color="blue">//Unfreeze the buffer as soon as possible after using it, this 
+                                 //prevents problems later</font>
+<br>    //...
+<br>    mpUser = mpUsers->GetUser(pUserId, false, false);
+<br>    if (!mpUser)
+<br>    {
+<br>        MyeBayCommonErrorXML(ER_MYEBAYALL_NO_USER, 
+                             XSLMyEbayAll, 
+                             pXSLStyle, 
+                             partnerId, 
+                             siteId);
+<br>        <font color="green">CleanUp();</font> <font color="blue">//no delete is needed</font>
+<br>        return;
+<br>    }
+<br>    //...
+<br>    CleanUp();
+<br>}</pre></code>
+<p>This solution is the most recommended.  If a local variable was not usable, you would delete the pointer in any code 
+block that would exit the function.  Notice also that the buffer for the variable is unfrozen as soon as the variable was used.  
+This frees the variable to be used in another function (such as delete).  The problem with unfreezing the buffer later, as shown 
+in the first example, is that the CleanUp function in the if(!mpUser) block may not have been able to deallocate the variable.</p>
+<!-- ********** Header 2 ******************** -->
+<p></p><hr><font class="subhead2">
+<a name="Vector">Vector Data Structures</a></font>
+<p>Vectors are convenient and elegant data structures, but the improper use of a vector can
+tie up memory just as easily as a standard pointer.  The member objects of a vector are not deallocated when the vector 
+is deallocated.  They must be deallocated as well.</p>
+<p>An example of vector leaking in Cls***name omitted***.cpp:<br>
+<code><pre>
+if (mpItem && (mpItem->GetAuctionType() == ItemFixedPrice) && !(mpItem->WasListedAfterCheckout()))
+<br>{
+<br>    BidVector vFinalBids; <font color="blue">//remember to clear it before the function ends</font>				
+<br>    //...
+<br>    txnHistoryResult.CopyFinalBidsVectortoTransactionsVector(vFinalBids, 
+                                                             (int)userType); <font color="red">//bid objects are allocated
+                                                                             //and placed in the vFinalBids vector 
+                                                                             //but are not freed after that</font>
+<br>    <font color="blue">//the vFinalBids vector is cleared by the implicit destructor</font>
+<br>}
+</pre></code>
+<p>In the above example, objects are associated with the vector in a function call but are not deallocated.  In order to properly 
+use this vector, the member objects need to be deleted separately before the vector is deallocated.  This is accomplished with a 
+simple loop and the proper pointer variable reference, as seen below.<br>
+<code><pre>
+if (mpItem && (mpItem->GetAuctionType() == ItemFixedPrice) && !(mpItem->WasListedAfterCheckout()))
+<br>{
+<br>    BidVector vFinalBids; 
+<br>    BidVector::iterator iBid;
+<br>    //...
+<br>    txnHistoryResult.CopyFinalBidsVectortoTransactionsVector(vFinalBids, 
+                                                                 (int)userType);
+<br>    <font color="blue">//Iterator to be used to walk through the contents of the vector</font>
+<br>    <font color="green">BidVector::iterator theBid;
+<br>    for (iBid = vFinalBids.begin(); iBid != vFinalBids.end(); iBid ++)
+<br>        delete (*iBid);</font> <font color="blue">//delete the objects one at a time with a loop</font>
+<br>    //the vFinalBids vector is cleared by the implicit destructor
+<br>}
+</pre></code>
+<p>Objects arranged in a vector do not always have their own destructor, either by design or because of some sloppy 
+programming.  Always assume that they do not destroy themselves.  The author of the class to create these objects 
+cannot always anticipate how the functions will be used so it is your responsibility, if you wish to use the class, to 
+make sure the objects are deallocated properly.</p>
+<!-- ********** Header 2 ******************** -->
+<p></p><hr><font class="subhead2">
+<a name="GetItem">Leaving Pointers and Data (with GetItem)</a></font>
+<p>Pointers that store the location of an object or parts of an object can keep portions of memory in existence unless 
+they are freed.  It is not uncommon to reference information using a pointer and then forget to free the pointer before leaving 
+the scope.  This can cause a pointer to remain after it is no longer useful and the object corresponding to that pointer to remain 
+allocated in memory.</p> 
+
+<p>GetItem is a member function of the clsItems class that creates a clsItem object.  GetItem 
+will not cleanup the item object it allocates before it is finished executing.  In the example below, mpItem, a pointer to a 
+clsItem object, is never freed.  Therefore, GetItem holds onto the information, waiting for it to be used. Errors of this kind 
+leave data in memory that will be lost.  Any time GetItem or GetUser is called, memory is allocated and needs to be freed. 
+</p>
+<p>A leak example with mpUser:<code><pre>
+clsItem *pBlockedItem = mpItems->GetItem(mpItem->GetId(), false, NULL, 0, true);<font color="blue">//pBlockedItem is allocated</font>
+<br>if (pBlockedItem)
+<br>{
+<br>    // Item # already there, log error
+<br>    mpResult->AddError("1.2.4");
+<br>    success = false;
+<br>    <font color="red">//pBlockedItem is not going to be used anymore but it is not deleted</font> 
+<br>}	
+</pre></code>
+<p>When an object is not going to be used anymore (such as when an error has occurred), it 
+should be released with a "delete /*object name*/" call.  CleanUp will dissolve all of the objects in the current
+heap and is sometimes too general for use.</p>
+<code><pre>
+clsItem *pBlockedItem = mpItems->GetItem(mpItem->GetId(), false, NULL, 0, true);<font color="blue">//pBlockedItem is allocated</font>
+<br>if (pBlockedItem)
+<br>{
+<br>    // Item # already there, log error
+<br>    mpResult->AddError("1.2.4");
+<br>    success = false;		
+<br>    <font color="green">delete pBlockedItem;</font> 
+<br>    <font color="blue">//since pBlockedItem is not going to be used anymore, make sure you delete it before exiting the function... ClsITEMS::GetItem is always allocating memory </font> 
+<br>}
+</pre></code>
+<p>This is a very simple example but represents over 18% of the memory leaks found in the last year.  Do not forget to free your 
+pointers before exiting a function.</p>
+<!-- ********** Header 2 ******************** -->
+<p></p><hr><font class="subhead2">
+<a name="GetUser"> Overwriting Pointers and Data (with GetUser)</a></font>
+<p>This is a more complicated example of the problem mentioned in the previous section.  Freeing a variable is particularly 
+critical with object element pointers if the parent object is overwritten but the pointer to an element in that object is not.  
+You end up with a leftover object with no pointer to it.  This type of memory leak comprises only about 5% of the memory leaks 
+found in the last year but they fill memory just like other memory leaks.</p> 
+
+<p>GetUser is a member function of the clsUsers class that creates a clsUser object.  GetUser 
+will not clean up the clsUser object it allocates before it is finished executing.  In the following example, mpUser remains 
+pointing at an object element whose pointer is overwritten by another function before being freed.  Errors of this kind leave 
+spots in memory that hold information that is either no longer valid or should have been retained.  Any time a pointer is 
+overwritten, the previous object the pointer was pointing to will still have memory assigned to it if it is not freed.  It is 
+imperative that a pointer not be overwritten until an object it points to is freed in memory.  In the case of GetUser and GetItem, 
+the objects they create are not cleaned up until they complete.
+</p>
+<p>Another leak example with mpUser:
+<code><pre>
+void clseBayApp::ChangeEmail2Show(CEBayISAPIExtension *pServer, char *pUserId, char *pPass, char *pEmail2)
+{
+<br>    mpUser = mpUsers->GetAndCheckUserAndPassword(pUserId, 
+                                                 pPass,
+                                                 mpStream, 
+                                                 GetCurrentPage()); <font color="blue">//GetAndCheckUserAndPassword executes GetUser</font> 
+<br>    //...
+<br>    <font volor="blue">// mpUser is still allocated; getUser has not finished</font>
+<br>    //...
+<br>    OptinLogin(pServer, 
+               pUserId, 
+               pPass, 
+               /*filter*/ 0, 
+               /*showHeader*/ false); <font color="red">//OptinLogin will call SetUp as its first function call, which will 
+                                      //overwrite the user object leaving mpUser leaking.</font>
+<br>    CleanUp();
+<br>}
+</pre></code>
+<p>In the example above, GetAndCheckUserAndPassword creates a clsUser object using getUser.  A pointer from that object in the 
+mpUsers field is passed to the mpUser variable.  OptinLogin handles a change to the clsUser object, including the pointer held 
+in the mpUsers field.  mpUser still holds a pointer from the original clsUser object and now points to old data.  
+The memory for the first object's field remains allocated even though the clsUser object has been changed.  At the end of 
+the function, CleanUp cleans up the new clsUser object (by allowing getUser to complete) and cleans up mpUser, but does not clean 
+up the original mpUsers field that remains in memory.  Even though mpUser is deallocated after OptinLogin was called, the object it 
+points to is a field of some object no longer referred to.  Therefore, as getUser completes, it deallocates the current clsUser 
+object and the things its fields currently point to.</p>
+
+<p>To remedy this, free up the memory allocated for the first object before changing it or creating a new one.  If you need 
+the information from the previous object, store the information in a local variable, not a pointer.  Making another call to 
+getUser will not free up the memory on its own.  A Cleanup() can be executed before the data objects are used again.  This frees 
+mpUser and allows getUser to complete before calling getUser again with OptinLogin.</p>
+
+<p>Here is a correct example:</p>
+<code><pre>void clseBayApp::ChangeEmail2Show(CEBayISAPIExtension *pServer, char *pUserId, char *pPass, char *pEmail2)
+<br>{
+<br>    mpUser = mpUsers->GetAndCheckUserAndPassword(pUserId, 
+                                                 pPass, 
+                                                 mpStream, 
+                                                 GetCurrentPage());//GetAndCheckUserAndPassword executes GetUser 
+<br>    //...
+<br>    // mpUser is still allocated 
+<br>    //...
+<br>    <font color="green">CleanUp(); </font><font color="blue">//make sure to cleanUp the user Object before 
+               //calling clsEbayApp::OptinLogin</font>
+<br>    OptinLogin(pServer, 
+                   pUserId, 
+                   pPass, 
+                   /*filter*/ 0, 
+                   /*showHeader*/ false);
+<br>    CleanUp();
+<br>}
+</pre></code>
+<p>This results in a new clsUsers object being created when OptinLogin is called.  Although this is another query to the local 
+database, it poses less of a problem for performance than a memory leak.  Another way to handle this would be to use the pointer 
+in mpUser to find the parent object and deallocate it manually.  This would still have to happen before the call to OptinLogin and 
+would be more cumbersome.  You could also create a variable to hold the pointer to the original clsObject but this is only useful 
+if you wish to refer to the object after the processes before the call to OptinLogin.</p>
+
+
+<!-- ********** Header 2 ******************** -->
+<p></p><hr><font class="subhead2">
+<a name="Leak">The LeakDiag Tool</a></font>
+<p>
+  LeakDiag is a new beta tool from Microsoft to diagnose memory leaks. It provides stack traces with line numbers for 
+  the leaks. The UI is different for Windows 2000 and Windows NT 4.0, but works on both platforms. On Windows 2000
+   development boxes, it runs very fast. On a Windows NT 4.0 production platform, it takes a long time to dump the leaks out (up to 
+   two hours) so if you use it on production be patient.
+</p>
+<p>
+Use the tool by doing the following:
+<ol>
+	<li> execute <Code>set path=%path%;c:\leakdiag</code> in the DOS window from where you start up the tool.</p>
+</ol>
+<p>	
+ 	<b>For Windows 2000:</b>
+	<ol>
+		<li value="2">Go to Tools->options and set your symbol search path to include the paths for your .pdb's. (ebayisapi.pdb )<br>
+		<li>Check mark the "Use DbgHelp API to walk stacks" check box.
+		<li>For the Maximum Stack Depth option, type in the value 32.
+	</ol>
+</p>
+<p>
+    <b>For Windows NT 4.0:</b>
+	<ol>
+		<li value="2">Create a directory c:\debug.
+		<li>Go to HKLM\Software\Microsoft\LeakDiag\Sympath.  Change the string to read: <br><br>
+		<code>&nbsp;&nbsp;&nbsp;SRV*c:\debug*http://msdl.microsoft.com/download/symbols;c:\symbols;c:\winnt</code>  
+		<br><br>Add additional paths to your ebayisapi.pdb etc. by separating them with a ‘;’
+	</ol>
+</P>
+<p>
+     The tool lets you choose between several allocators to track.
+	 <ul>
+		<li>Choosing the Heap Allocator will show you CAL reported leaks.  It can also show  heap allocator leaks from 3rd party 
+		software.
+		<li>Choosing other allocators, like the C-runtime allocator or the COM allocator, will show leaks which CAL won't show. 
+	</ul>
+</p>
+<p>
+		On an NT 4.0 machine, you can only track one allocator at a time. On a win2k machine, you can track an allocator,  
+		then use "Unload", and then track another allocator.
+
+</p><p>
+	<b>This is Beta software. Windows 2000 version has online help.</b>
+
+</p>
+
+<!-- ********** Header 2 ******************** -->
+<p></p><hr><font class="subhead2">
+<a name="Tech">Technical Contact</a>
+</font>
+<p>The technical information in this article was provided by 
+***********************names omitted***************************</p>
+
+<p>Product Development's
+<a href="http://www.tamson.net/fwhite/resume_07312004.htm">Technical Documentation team</a> is
+responsible for maintaining this page. This HTML document was created by
+<a href="mailto:ffwhite@live.com">Forest White</a>.</p>
+
+
+<!-- All content above this line -->
+<p></p>
+</body>
+
+<!-- #include virtual="/inc/contentEnd.inc" -->
+<!-- #include virtual="/inc/footer.inc" -->
+</html>

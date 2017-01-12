@@ -1,0 +1,334 @@
+/* Classes used for positioning by javascript.  DO NOT CHANGE */
+.pos 			{ 
+		position:relative; 
+		z-index:0
+				}
+.pos2 			{ 
+		position:absolute; 
+		z-index:0; 
+		left:0; 
+		top:0
+				}
+.foo 			{
+		position:absolute;
+		left:600;
+		top:100;
+		z-index:-5
+				}
+.foosub 		{
+		position:absolute;
+		left:0;
+		top:0;
+		z-index:-5
+				}
+
+/* HOME PAGE CUSTOM LINK CLASSES */				
+	
+	/*Headings for each site section*/				
+A.homesectionhead  {
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:17px;
+		color: #000000
+				}
+A.homesectionhead:visited {
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:17px;
+		color: #000000
+				}
+A.homesectionhead:link {
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:17px;
+		color: #000000
+				}
+A.homesectionhead:hover {
+		text-decoration: underline;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:17px;
+		color: #000000
+				}
+				
+	/*Link to advanced Search*/			
+A.homesearchlink { 
+		text-decoration: underline;
+		font-family:arial,sans-serif;
+		font-size:10px;
+		color: #669900
+				}
+A.homesearchlink:visited {
+		text-decoration: underline;
+		color: #669900
+				}
+A.homesearchlink:link {
+		text-decoration: underline;
+		color:  #669900
+				}
+A.homesearchlink:hover { 
+		text-decoration: underline;
+		color: #993366
+				}
+
+	/*Individual links for each subsection*/
+A.navlink 		{
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial,sans-serif;
+		font-size:10px;
+		color: #000000
+				}
+A.navlink:visited {
+		text-decoration: none; color: #000000
+				}
+A.navlink:link 	{
+		text-decoration: none;
+		color:  #000000
+				}
+A.navlink:hover {
+		text-decoration: underline;
+		color: #669900
+				}
+
+/*END CUSTOM LINK CLASSES FOR HOME PAGE*/
+
+/* HOME PAGE CALL OUT CLASS AND DATE FORMATTING */
+.homehead 		{ 
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:17px;
+		color: #993366
+				}
+
+.homedate 		{ 
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial,sans-serif;
+		font-size:12px;
+		color: #000000
+				}
+/* END HOME PAGE CALL OUT CLASS AND DATE FORMATTING */
+
+
+
+/* SUB PAGE CUSTOM LINK CLASSES */
+
+A.subnav 		{
+		text-decoration: none;
+		font-family:arial,sans-serif;
+		font-size:12px;
+		color: #731d4b
+				}
+				
+A.level1link 	{
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial,sans-serif;
+		font-size:14px;
+		color:#993366
+				}
+A.level1link:visited { 
+		text-decoration: none;
+		color: #993366
+				}
+A.level1link:link { 
+		text-decoration: none;
+		color:  #993366
+				}
+A.level1link:hover {
+		text-decoration: underline;
+		color: #669900
+				}
+
+A.indexlink 	{
+		text-decoration: none;
+		font-family:arial,verdana,sans-serif;
+		font-size:12px;
+		color: #333366
+				}
+A.indexlink:visited { 
+		text-decoration: none;
+		color: #333366
+				}
+A.indexlink:link {
+		text-decoration: none;
+		color:  #333366
+				}
+A.indexlink:hover {
+		text-decoration: underline;
+		color: #333366
+				}
+
+/* Added new SUB PAGE CUSTOM TEXT CLASS */				
+        /* Update if A.indexlink is changed */	
+.indexnolink 	{
+		text-decoration: none;
+		font-family:arial,verdana,sans-serif;
+		font-size:12px;
+		color: #888888
+				}
+
+A.level3link 	{
+
+		text-decoration: none;
+		font-family:arial,sans-serif;
+		font-size:12px;
+		color: #000000
+				}
+A.level3link:visited {
+		text-decoration: none;
+		color: #000000
+				}
+A.level3link:link {
+		text-decoration: none;
+		color:  #000000
+				}
+A.level3link:hover {
+			text-decoration: underline;
+			color: #000000
+				}
+
+A.searchlink 	{
+		text-decoration: underline;
+		font-family:arial,sans-serif;
+		font-size:10px;
+		color: #FFCC00
+				}
+A.searchlink:visited {
+		text-decoration: underline;
+		color: #FFCC00
+				}
+A.searchlink:link { 
+		text-decoration: underline;
+		color:  #FFCC00
+				}
+A.searchlink:hover {
+		text-decoration: underline;
+		color: #FFFFFF
+				}
+
+A.leftnavlink 	{ 
+		text-decoration: none; 
+		font-weight:bold;
+		font-family:arial,sans-serif;
+		font-size:12px;
+		color: #FFFFFF
+				}
+A.leftnavlink:visited {
+		text-decoration: none;
+		color: #FFFFFF
+				}
+A.leftnavlink:link { 
+		text-decoration: none;
+		color:  #FFFFFF
+				}
+A.leftnavlink:hover {
+		text-decoration: underline;
+		color: #FFCC00
+				}
+/* END SUB PAGE CUSTOM LINK CLASSES */
+
+/* SUB PAGE CUSTOM TEXT CLASSES */
+.subhead1 		{
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:22px;
+		color: #669900
+				}
+
+.subhead2	 	{
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:19px;
+		color: #993366
+				}
+/* Added new SUB PAGE CUSTOM TEXT CLASS */
+.subhead3	 	{
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:16px;
+		color: #993366
+				}
+
+/* Added new SUB PAGE CUSTOM TEXT CLASS */
+.subhead4	 	{
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial narrow,arial,sans-serif;
+		font-size:16px;
+		color: #000000
+				}
+				
+/* Added new SUB PAGE CUSTOM TEXT CLASS */
+.sublist1	 	{
+		text-decoration: none;
+		font-weight:bold;
+		font-family:arial,verdana,sans-serif;
+		font-size:14px;
+		color: #000066
+				}
+				
+.footer 		{
+		text-decoration: none;
+		font-family:arial,sans-serif;
+		font-size:10px;
+		color: #000000}								
+/* END SUB PAGE CUSTOM TEXT CLASSES */
+
+/* CONTENT FORMATTING CLASSES */
+				
+P.small			{
+		text-decoration:none;
+		font-family:arial,verdana,sans-serif;
+		color:#000000;
+		font-size:11px
+				}				
+		
+P				{
+		text-decoration:none;
+		font-family:arial,verdana,sans-serif;
+		color:#000000;
+		font-size:12px
+				}	
+				
+UL				{
+		text-decoration:none;
+		font-family:arial,verdana,sans-serif;
+		color:#000000;
+		font-size:13px
+				}
+/* Added new OL CLASS */	
+OL				{
+		text-decoration:none;
+		font-family:arial,verdana,sans-serif;
+		color:#000000;
+		font-size:13px
+				}
+
+H1 				{
+		text-decoration: none;
+		font-family:arial,sans-serif;
+		font-size:21px;
+		color: #6633CC
+				}
+
+H2				{
+		text-decoration: none;
+		font-family:arial,sans-serif;
+		font-size:18px;
+		color: #333366
+				}	
+.subindent			{
+		position: absolute;
+		left: ;
+		top:
+				}			
+		

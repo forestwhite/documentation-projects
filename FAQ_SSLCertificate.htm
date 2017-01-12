@@ -1,0 +1,80 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+
+
+<body>
+<!-- Input Page Content Here -->
+
+<!-- ********** Header 1 ******************** -->
+<p></p><h2>
+FAQ: TLS/SSL certificates explained
+</h2>
+<hr>
+<font size="4">
+<p>
+<em>What is TLS/SSL?</em>
+</p><p>
+The TLS (Transport Level Security) protocol is a cryptographic protocol designed to protect messages exchanged between a client and service over a computer network. TLS operates by coordinating communications with a third party encryption key provider, called a Certificate Authority (CA), that the client trusts to validate the service's identity and that issues the private encryption keys to enable the client and service to communicate with encrypted messages. All current versions of the major web browsers support TLS communications. The SSL (Secure Socket Layer) protocol is a predecessor to TLS, and the two terms are used interchangeably.
+</p><p>
+<em>What is a TLS/SSL certificate?</em>
+</p><p>
+A TLS certificate is a digitally signed document hosted by a service proclaiming that a third party encryption key provider, or Certificate Authority (CA), can validate a service's identity. Before a client shares sensitive information with a service, it can request a TLS certificate to validate the service's identity as a domain entity, web site, and/or network service. Web browsers natively support this type of request and designate a TLS transaction with the "https" prefix in the URL. When the client receives the TLS certificate, it validates it with the CA listed in the certificate. If the CA can validate the service's identity, the CA issues private encryption keys to the client and service independently, which allows them to encrypted and decrypt communications with each other safely.
+</p><p>
+<em>What does a TLS certificate protect me from?</em>
+</p><p>
+Sites and services whose identities cannot be verified by TLS certificate generate warnings to the client that the site or service might be an impostor. This protects against phishing sites, some cross-site scripting (XSS) attacks, and user errors. Further, encrypted communications validated by a third party protect against information theft and commands issued from a stolen identity, such as deleting data or authenticating a session request with a stolen password. When your web browser is using TLS encrypted communications, a distinctive lock icon appears in the address bar in the locked position.
+</p><p>
+<em>How does a TLS certificate protect me?</em>
+</p><p>
+If a TLS certificate provided by a service isn't issued by a Certificate Authority (CA) the client trusts, the client is alerted (typically with a browser warning message) that the service can't be verified and warned not to provide any sensitive information to the service. If the TLS certificate is a forgery, the Certificate Authority responds with a warning that the service's certificate contains errors or is out of date, so the identity of the service can't be verified. Finally, if either the client or service aren't those to which the Certificate Authority (CA) issues private keys, the encrypted communications are undecipherable and therefore protected from intrusion or mistaken identity.
+</p><p>
+<em>What is a root key and why does its length matter?</em>
+</p><p>
+A root key is the combination of the public key from a service's TLS certificate and the private keys issued to the client and service to encrypt their communication. The longer the root key, the greater number of keys exist and the larger number of encrypted combinations the key can generate when encrypting your communications. The current standard is a 2048-bit root key, which RSA Security equates in strength to 112-bit symmetric encryption for all network communications. The 2048-bit standard was implemented in 2010 when the previous 1024-bit root key encryption became vulnerable. Older browsers may not support this level of encryption, so Server Gated Cryptography (SGC) was implemented to allow services to upgrade browser encryption capability remotely to support 128/256-bit encryption. Without SGC, your longer root key cannot protect users using older technology.
+</p><p>
+<em>What are the benefits of a TLS certificate?</em>
+</p><p>
+Any network service that responds to client requests with a TLS certificate establishes itself as a trusted service with a verifiable identity. Clients seeking services they can trust respond positively to current and valid TLS certificates. In fact, for most financial transactions TLS encryption is required. Further, if the data your service collects or provides is valuable, the TLS protocol provides a minimum level of security against most cyber attacks. Additionally, TLS certificates provide three classifications of validation, which correspond to the stringency of the vetting process a Certificate Authority (CA) applies before issuing a TLS certificate.
+</p><p>
+<em>What do the TLS certificate levels mean?</em>
+</p><p>
+Certificate Authorities (CAs) issue TLS certificates to services with verifiable identities, but the specific vetting processes determine the certificate level issued. For basic Domain Validation (DV) certificates, CAs establish whether the certificate applicant has administrative rights over a service's domain. This can be done via email because a domain purchase typically requires the owners email address. An Organization Validation (OV) certificate application requires that the owner be a recognized legal entity in addition to possessing administrative rights over the service domain. This is typically done by verifying the service owner's identity with government agencies such as a chamber of commerce or board of trade. Extended Validation (EV) certificates are issued to services that can convince a CA of their identity as a legitimate and protected network entity. Criterion for EV certification varies by CA, but usually involves physical evidence and demonstrations of legitimate service activities.
+</p><p>
+<em>Which certificate level is appropriate for my network service?</em>
+</p><p>
+Besides the encryption provided for all certificate holders, the certificate level benefits organizations well matched with the level of trust expected by your clients. A Domain Validation (DV) certificate is sufficient for a small website or web application that handles relatively few transactions and doesn't handle any personally identifiable information directly (for example, by handling business transactions through a third party service with higher level certificates). However, a service should pursue an Organization Validation (OV) certificate if users create ongoing accounts with your service or your business expands beyond the startup phase. Extended Validation (EV) certificates are appropriate for organizations that handle sensitive identity information and require a high level of trust with their customers, such as banks, medical facilities, government offices, legal counsel, accredited schools and universities, etc. The EV certificate also changes most browser address bar backgrounds green to inform users of the secure status of the service.
+</p><p>
+<em>How do I choose a Certificate Authority (CA) from which to purchase a TLS certificate?</em>
+</p><p>
+Certificate Authorities (CAs) are organizations that verify the identities of network services, issue TLS certificates to verified network services, and generate private encryption keys that encrypt the communication between clients and verified network services. Choosing a CA is a business decision, which should take into account the CA's track record and the terms of the SSL certificate purchase. Typically, CAs are global leaders in Internet Security, such as Symantec (VeriSign), Comodo, GlobalSign, and DigiCert but also include large domain registrars, such as GoDaddy and Network Solutions. To receive TLS certificates from any of the CAs, you must issue a Certificate Signing Request (CSR) to the CA and complete the verification processes for that CA. Most certificates are purchased for a term from 1 to 5 years and contain warranties which indicate how much money can be provided if their encryption is broken. Also, there are only a limited number of CAs that support domain names with international character sets, called International Domain Language (IDL) support, so check for IDL support specifically if you need it.
+</p><p>
+<em>Can a single TLS certificate protect more than one domain?</em>
+</p><p>
+A TLS certificate is typically valid for a single fully qualified domain name (FQDN), which is the unique address for a network service's domain. Different Certificate Authorities (CAs) provide different options for domain and subdomain coverage under one TLS certificate. Such options include Subject Alternative Name (SAN) or Unified Communications (UC) certificates, wildcard options, or an additional domain with the purchase of a single domain certificate. A Subject Alternative Name (SAN) certificate allows you to protect multiple domain names on a single IP address and must accompany the Certificate Signing Request (CSR). A Unified Communications (UC) certificate is practically identical to a SAN certificate, but is sometimes specifically defined as protecting a set number of domain names under one certificate. A wildcard option is strictly defined to protect a single domain and an unlimited number of subdomains. Finally, an additional domain is sometimes protected with the purchase of a single domain, offered most recently by Comodo, GeoTrust, RapidSSL, and DomenySSL.
+</p><p>
+<em>How does a CA reissue a TLS certificate?</em>
+</p><p>
+As noted above, TLS certificates are typically issued for a term of 1 to 5 years, and this term is included in the TLS certificate to establish its status as current or expired. The term cannot be extended. When the term expires, the service must request a reissue to use the same TLS certificate. In every case, the service should issue a new Certificate Signing Request (CSR). If the expired term was only one year, additional steps may not be required. For longer terms, CAs typically reverify a service's identity and may require additional steps, especially if the CA changed its policies since the original TLS certificate was issued.
+</p></font>
+
+<!-- ********** Header 2 ******************** -->
+<p></p><hr><p>
+<a name="Tech">Technical Contact</a>
+</p>
+<p>The technical information in this article was provided by 
+***********************names omitted***************************</p>
+
+<p>Product Development's
+<a href="http://ffwhite.com/professional" target="_blank">Technical Documentation team</a> is
+responsible for maintaining this page. This HTML document was created by
+<a href="mailto:ffwhite@live.com">Forest White</a>.</p>
+
+
+<!-- All content above this line -->
+<p></p>
+</body>
+
+<!-- #include virtual="/inc/contentEnd.inc" -->
+<!-- #include virtual="/inc/footer.inc" -->
+</html>
