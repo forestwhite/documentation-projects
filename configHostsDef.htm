@@ -1,425 +1,428 @@
-<html>
-
-<LINK REL="StyleSheet" HREF="style.css" type="text/css">
-
-  
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>The configHosts.txt File</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-<!-- ********** Header 1 ******************** -->
-<font class="subhead1">
-The configHosts.txt File
-</font>
+  <!-- ********** Header 1 ******************** -->
+  <font class="subhead1">
+    The configHosts.txt File
+  </font>
 
-<!-- ********** Header 2 ******************** --> 
-<p></p><font class="subhead2">
-Overview
+  <!-- ********** Header 2 ******************** -->
+  <p></p><font class="subhead2">
+  Overview
 </font>
 
 <p>This article describes the configHosts.txt file, its purpose and its
-contents.</p>
+  contents.</p>
 
-<ul>
-  <a href="#Purpose" class = "subnav">
-  &raquo; Purpose of configHosts.txt</a><br>
-  <a href="#Settings" class = "subnav">
-  &raquo; Using the configHosts.txt file</a><br>
-  <a href="#CheckFile" class = "subnav">
-  &raquo; Verifying the Values in configHosts.txt</a><br>
-  <a href="#TechnicalContact" class = "subnav">
-  &raquo; Technical Contact</a><br>
-</ul>
+  <ul>
+    <a href="#Purpose" class = "subnav">
+      &raquo; Purpose of configHosts.txt</a><br>
+      <a href="#Settings" class = "subnav">
+        &raquo; Using the configHosts.txt file</a><br>
+        <a href="#CheckFile" class = "subnav">
+          &raquo; Verifying the Values in configHosts.txt</a><br>
+          <a href="#TechnicalContact" class = "subnav">
+            &raquo; Technical Contact</a><br>
+          </ul>
 
-<p>For information on the external configuration file used for building
-***Name Omitted***.dll, see the article on the
-<a href="ConfigHostsDef.htm">***Name Omitted***</a> file.</p>
+          <p>For information on the external configuration file used for building
+            ***Name Omitted***.dll, see the article on the
+            <a href="ConfigHostsDef.htm">***Name Omitted***</a> file.</p>
 
-<!-- ********** Header 2 ******************** -->
-<p></p><hr><font class="subhead2">
-Purpose
-</font>
+            <!-- ********** Header 2 ******************** -->
+            <p></p><hr><font class="subhead2">
+            Purpose
+          </font>
 
-<p>The configHosts.txt file is an external configuration file that aids in
-dynamically changing the test and use environment. Its contents list host names and directories, both physical 
-and logical, that the source may be required to use.  Therefore, if QA or production needs to change their 
-current host configuration, they need only change this file in order to make it work with the source.  This is 
-especially true for Database hosts.
-</p>
+          <p>The configHosts.txt file is an external configuration file that aids in
+            dynamically changing the test and use environment. Its contents list host names and directories, both physical
+            and logical, that the source may be required to use.  Therefore, if QA or production needs to change their
+            current host configuration, they need only change this file in order to make it work with the source.  This is
+            especially true for Database hosts.
+          </p>
 
-<p>These files (in QATE) are the responsibility of release management.  They keep them in clearcase 
-and are responsible for rolling out changes to the QATE environment. You may find old versions in 
-the buildtools VOB.  If your build requires 
-changes or a specific schema or confighosts.txt file to work properly, please note it in the 
-build request. If these changes are permanent, please note that as well, and we will put them 
-under source control. Please do not roll these files out to QATE yourself as it can create 
-confusion if we are not aware of these changes. At best, it means a little head-scratching as 
-we try to figure out where the new file came from.  At worst, it can mean lost QA cycles.</p>
+          <p>These files (in QATE) are the responsibility of release management.  They keep them in clearcase
+            and are responsible for rolling out changes to the QATE environment. You may find old versions in
+            the buildtools VOB.  If your build requires
+            changes or a specific schema or confighosts.txt file to work properly, please note it in the
+            build request. If these changes are permanent, please note that as well, and we will put them
+            under source control. Please do not roll these files out to QATE yourself as it can create
+            confusion if we are not aware of these changes. At best, it means a little head-scratching as
+            we try to figure out where the new file came from.  At worst, it can mean lost QA cycles.</p>
 
-<!-- ********** Header 2 ******************** -->
-<p></p><hr><font class="subhead2">
-<a NAME="Settings">Using the configHosts.txt file</a>
-</font>
+            <!-- ********** Header 2 ******************** -->
+            <p></p><hr><font class="subhead2">
+            <a NAME="Settings">Using the configHosts.txt file</a>
+          </font>
 
-<p>The configHosts.txt file must be located in the directory specific to the platform that uses it.
-On NT boxes, it should be located in</p>
-<ol><pre>D:\ebayconfig</pre></ol>
-<p>On UNIX machines, it should be present in the current directory where the batch job is executing,
-as specified in the configBuild.txt (~www/etc/configBuild.txt) file, or in</p>
-<ol><pre>/usr/local/etc</pre></ol>
+          <p>The configHosts.txt file must be located in the directory specific to the platform that uses it.
+            On NT boxes, it should be located in</p>
+            <ol><pre>D:\ebayconfig</pre></ol>
+            <p>On UNIX machines, it should be present in the current directory where the batch job is executing,
+              as specified in the configBuild.txt (~www/etc/configBuild.txt) file, or in</p>
+              <ol><pre>/usr/local/etc</pre></ol>
 
-<p>Below is an example of a confighosts.txt file followed by the explanation
-for each line:</p>
-  
-<ul><pre>
-physical 
-FirstHost(e119_staging_acc, e119_staging_acc, acc_test, retryCount=1, delay=0, reanimate=0) 
-EverythingElseHost(e119_staging_main, e119_staging_main, bigfoot, retryCount=1, delay=2, reanimate=3) 
-logical 
-AccountsHostRetry(Sequential, FirstHost, EverythingElseHost) 
-AccountsHost(Single, FirstHost) 
-Default(Single, EverythingElseHost) 
-</pre></ul>
+              <p>Below is an example of a confighosts.txt file followed by the explanation
+                for each line:</p>
 
-<!-- ********** Header 3 ******************** -->
-<p></p><font class="subhead3">
-Sections
-</font>
+                <ul><pre>
+                  physical
+                  FirstHost(e119_staging_acc, e119_staging_acc, acc_test, retryCount=1, delay=0, reanimate=0)
+                  EverythingElseHost(e119_staging_main, e119_staging_main, bigfoot, retryCount=1, delay=2, reanimate=3)
+                  logical
+                  AccountsHostRetry(Sequential, FirstHost, EverythingElseHost)
+                  AccountsHost(Single, FirstHost)
+                  Default(Single, EverythingElseHost)
+                </pre></ul>
 
-<p>The configHosts.txt file is divided into two sections using labels in the
-file: <b>physical</b> and <b>logical</b>. The <b>physical</b> section contains
-the database topology information. The second section, <b>logical</b>, contains
-logical mapping settings. Each of these two sections are represented in
-configHosts.txt by a label of the same name. The settings for the
-<b>physical</b> section continue until the <b>logical</b> label is reached.
-After that point, the settings for the <b>logical</b> section are listed.</p>
+                <!-- ********** Header 3 ******************** -->
+                <p></p><font class="subhead3">
+                Sections
+              </font>
 
-<!-- ********** Header 3 ******************** -->
-<p></p><font class="subhead3">
-<a name="Physical">The Physical Section</a>
-</font>
+              <p>The configHosts.txt file is divided into two sections using labels in the
+                file: <b>physical</b> and <b>logical</b>. The <b>physical</b> section contains
+                the database topology information. The second section, <b>logical</b>, contains
+                logical mapping settings. Each of these two sections are represented in
+                configHosts.txt by a label of the same name. The settings for the
+                <b>physical</b> section continue until the <b>logical</b> label is reached.
+                After that point, the settings for the <b>logical</b> section are listed.</p>
 
-<p>The <b>physical</b> section contains two sets of database topology
-configuration values, labeled <b>FirstHost</b> and <b>EverythingElseHost</b>.
-</p>
+                <!-- ********** Header 3 ******************** -->
+                <p></p><font class="subhead3">
+                <a name="Physical">The Physical Section</a>
+              </font>
 
-<p>Configuration settings defined in the <b>physical</b> section are used later
-in the <a href="#LogicalSection"><b>logical</b></a> section. For example, both
-the <a href="#FirstHost"><b>FirstHost</b></a> and <a href="#EverythingElseHost">
-<b>EverythingElseHost</b></a> labels are used by name in
-<a href="#AccountsHostRetry"><b>AccountsHostRetry</b></a> in the <b>logical</b>
-section.</p>
+              <p>The <b>physical</b> section contains two sets of database topology
+                configuration values, labeled <b>FirstHost</b> and <b>EverythingElseHost</b>.
+              </p>
 
-<!-- ********** Header 4 ******************** -->
-<p><b>
-<a name="FirstHost">The FirstHost Label</a>
-</b></p>
+              <p>Configuration settings defined in the <b>physical</b> section are used later
+                in the <a href="#LogicalSection"><b>logical</b></a> section. For example, both
+                the <a href="#FirstHost"><b>FirstHost</b></a> and <a href="#EverythingElseHost">
+                <b>EverythingElseHost</b></a> labels are used by name in
+                <a href="#AccountsHostRetry"><b>AccountsHostRetry</b></a> in the <b>logical</b>
+                section.</p>
 
-<ul><font   face="Courier New, Courier"><pre>
-FirstHost(e119_staging_acc, e119_staging_acc, acc_test, retryCount=1, delay=0, reanimate=0)
-</pre></font></ul>
+                <!-- ********** Header 4 ******************** -->
+                <p><b>
+                  <a name="FirstHost">The FirstHost Label</a>
+                </b></p>
 
-<p>The first set of configuration values in the <b>physical</b> section,
-<b>FirstHost</b>, pertain to login and access configuration. Table 1 shows the
-values specified in the <b>FirstHost</b> label.</p>
+                <ul><font   face="Courier New, Courier"><pre>
+                  FirstHost(e119_staging_acc, e119_staging_acc, acc_test, retryCount=1, delay=0, reanimate=0)
+                </pre></font></ul>
 
-<ul>
-  <table border="0" cellspacing="4" cellpadding="4" width="80%">
-    <tfoot><font class="P"><b>Table 1:</b> FirstHost Settings</font></tfoot>
-    <th bgcolor="#e0e0e0" width="10%"><p>Field</p></th>
-    <th bgcolor="#e0e0e0"width="30%"><p>Value in Example</p></th>
-    <th bgcolor="#e0e0e0" width="60%"><p>Purpose</p></th>
-  <tr>
-    <td align="center" valign="top">
-      <p>1</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">e119_staging_acc</font>
-    </td>
-    <td align="left" valign="top">
-      <p>The user name for login to the database.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <p>2</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">e119_staging_acc</font>
-    </td>
-    <td align="left" valign="top">
-      <p>The password for login to the database.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <p>3</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">acc_test</font>
-    </td>
-    <td align="left" valign="top">
-      <p>The instance as defined in the tsnames.ora file.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <p>4</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">retryCount=1</font>
-    </td>
-    <td align="left" valign="top">
-      <p>The default number of times a database access request is retried if
-      the first request does not succeed. Use this default value, this feature is not
-	  yet supported</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <p>5</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">delay=0</font>
-    </td>
-    <td align="left" valign="top">
-      <p>The number of seconds that the request waits before performing the
-      current action.  Use this default value, this feature is not
-	  yet supported</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <p>6</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">reanimate=0</font>
-    </td>
-    <td align="left" valign="top">
-      <p>The number of seconds that the requests waits before starting
-      reanimation.  Use this default value, this feature is not
-	  yet supported</p>
-    </td>
-  </tr>
-  </table>
-</ul>
+                <p>The first set of configuration values in the <b>physical</b> section,
+                  <b>FirstHost</b>, pertain to login and access configuration. Table 1 shows the
+                  values specified in the <b>FirstHost</b> label.</p>
 
-<!-- ********** Header 4 ******************** -->
-<p><b>
-<a name="EverythingElseHost">The EverythingElseHost Label</a>
-</b></p>
+                  <ul>
+                    <table border="0" cellspacing="4" cellpadding="4" width="80%">
+                      <tfoot><font class="P"><b>Table 1:</b> FirstHost Settings</font></tfoot>
+                      <th bgcolor="#e0e0e0" width="10%"><p>Field</p></th>
+                      <th bgcolor="#e0e0e0"width="30%"><p>Value in Example</p></th>
+                      <th bgcolor="#e0e0e0" width="60%"><p>Purpose</p></th>
+                      <tr>
+                        <td align="center" valign="top">
+                          <p>1</p>
+                        </td>
+                        <td align="left" valign="top">
+                          <font   face="Courier New, Courier">e119_staging_acc</font>
+                        </td>
+                        <td align="left" valign="top">
+                          <p>The user name for login to the database.</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center" valign="top">
+                          <p>2</p>
+                        </td>
+                        <td align="left" valign="top">
+                          <font   face="Courier New, Courier">e119_staging_acc</font>
+                        </td>
+                        <td align="left" valign="top">
+                          <p>The password for login to the database.</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center" valign="top">
+                          <p>3</p>
+                        </td>
+                        <td align="left" valign="top">
+                          <font   face="Courier New, Courier">acc_test</font>
+                        </td>
+                        <td align="left" valign="top">
+                          <p>The instance as defined in the tsnames.ora file.</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center" valign="top">
+                          <p>4</p>
+                        </td>
+                        <td align="left" valign="top">
+                          <font   face="Courier New, Courier">retryCount=1</font>
+                        </td>
+                        <td align="left" valign="top">
+                          <p>The default number of times a database access request is retried if
+                            the first request does not succeed. Use this default value, this feature is not
+                            yet supported</p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td align="center" valign="top">
+                            <p>5</p>
+                          </td>
+                          <td align="left" valign="top">
+                            <font   face="Courier New, Courier">delay=0</font>
+                          </td>
+                          <td align="left" valign="top">
+                            <p>The number of seconds that the request waits before performing the
+                              current action.  Use this default value, this feature is not
+                              yet supported</p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="center" valign="top">
+                              <p>6</p>
+                            </td>
+                            <td align="left" valign="top">
+                              <font   face="Courier New, Courier">reanimate=0</font>
+                            </td>
+                            <td align="left" valign="top">
+                              <p>The number of seconds that the requests waits before starting
+                                reanimation.  Use this default value, this feature is not
+                                yet supported</p>
+                              </td>
+                            </tr>
+                          </table>
+                        </ul>
 
-<ul><font   face="Courier New, Courier"><pre>
-EverythingElseHost(e119_staging_main, e119_staging_main, bigfoot, retryCount=1, delay=2, reanimate=3)
-</pre></font></ul>
+                        <!-- ********** Header 4 ******************** -->
+                        <p><b>
+                          <a name="EverythingElseHost">The EverythingElseHost Label</a>
+                        </b></p>
 
-<p>The second set of configuration values is represented by the
-<b>EverythingElseHost</b> label. The values in <b>EverythingElseHost</b> are
-the same as those in <a href="#FirstHost"><b>FirstHost</b></a>, but are used
-for subsequent database accesses.</p>
+                        <ul><font   face="Courier New, Courier"><pre>
+                          EverythingElseHost(e119_staging_main, e119_staging_main, bigfoot, retryCount=1, delay=2, reanimate=3)
+                        </pre></font></ul>
 
-<!-- ********** Header 3 ******************** -->
-<p></p><font class="subhead3">
-<a name="LogicalSection">The Logical Section</a>
-</font>
+                        <p>The second set of configuration values is represented by the
+                          <b>EverythingElseHost</b> label. The values in <b>EverythingElseHost</b> are
+                          the same as those in <a href="#FirstHost"><b>FirstHost</b></a>, but are used
+                          for subsequent database accesses.</p>
 
-<p>The label <b>logical</b> signals the end of the database topology
-section (<a href="#Physical"><b>physical</b></a>) and the beginning of the
-logical mapping section. The <b>logical</b> section consists of three sets of
-mapping configuration settings, using the labels
-<a href="#AccountsHostRetry"><b>AccountsHostRetry</b></a>,
-<a href="#AccountsHost"><b>AccountsHost</b></a>, and
-<a href="#Default"><b>Default</b></a>.</p>
+                          <!-- ********** Header 3 ******************** -->
+                          <p></p><font class="subhead3">
+                          <a name="LogicalSection">The Logical Section</a>
+                        </font>
 
-<!-- ********** Header 4 ******************** -->
-<p><b>
-<a name="AccountsHostRetry">The AccountsHostRetry Label</a>
-</b></p>
+                        <p>The label <b>logical</b> signals the end of the database topology
+                          section (<a href="#Physical"><b>physical</b></a>) and the beginning of the
+                          logical mapping section. The <b>logical</b> section consists of three sets of
+                          mapping configuration settings, using the labels
+                          <a href="#AccountsHostRetry"><b>AccountsHostRetry</b></a>,
+                          <a href="#AccountsHost"><b>AccountsHost</b></a>, and
+                          <a href="#Default"><b>Default</b></a>.</p>
 
-<ul><font   face="Courier New, Courier">
-  <pre><font size="2">
-AccountsHostRetry(Sequential, FirstHost, EverythingElseHost)
-</font></pre>
-  </font>
-</ul>
-<p>Table 2 shows the settings defined in <b>AccountsHostRetry</b>. These settings 
-  define the logical mapping topology of the database on subsequent accesses. 
-  <b>AccountsHostRetry</b> sets the access type, and then uses login values specified 
-  in <a href="#FirstHost"><b>FirstHost</b></a> and <a href="#EverythingElseHost"><b>EverythingElseHost</b></a> 
-  (defined previously in the <a href="#Physical"><b>physical</b></a> section).</p>
+                          <!-- ********** Header 4 ******************** -->
+                          <p><b>
+                            <a name="AccountsHostRetry">The AccountsHostRetry Label</a>
+                          </b></p>
 
-<ul>
-  <table border="0" cellspacing="4" cellpadding="4" width="80%">
-    <tfoot><font class="P"><b>Table 2:</b> AccountsHostRetry Definitions</font></tfoot>
-    <th bgcolor="#e0e0e0" width="10%"><p>Field</p></th>
-    <th bgcolor="#e0e0e0"width="30%"><p>Value in Example</p></th>
-    <th bgcolor="#e0e0e0" width="60%"><p>Purpose</p></th>
-  <tr>
-    <td align="center" valign="top">
-      <p>1</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">Sequential</font>
-    </td>
-    <td align="left" valign="top">
-      <p>Defines the access type.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <p>2</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">FirstHost</font>
-    </td>
-    <td align="left" valign="top">
-      <p>Defines the primary physical database topology.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <p>3</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">EverythingElseHost</font>
-    </td>
-    <td align="left" valign="top">
-      <p>Defines the secondary physical database topology.</p>
-    </td>
-  </tr>
-  </table>
-</ul>
+                          <ul><font   face="Courier New, Courier">
+                            <pre><font size="2">
+                              AccountsHostRetry(Sequential, FirstHost, EverythingElseHost)
+                            </font></pre>
+                          </font>
+                        </ul>
+                        <p>Table 2 shows the settings defined in <b>AccountsHostRetry</b>. These settings
+                          define the logical mapping topology of the database on subsequent accesses.
+                          <b>AccountsHostRetry</b> sets the access type, and then uses login values specified
+                          in <a href="#FirstHost"><b>FirstHost</b></a> and <a href="#EverythingElseHost"><b>EverythingElseHost</b></a>
+                          (defined previously in the <a href="#Physical"><b>physical</b></a> section).</p>
 
-<!-- ********** Header 4 ******************** -->
-<p><b> <a name="AccountsHost">The AccountsHost Label</a> </b></p>
-<ul>
-  <font   face="Courier New, Courier">
-  <pre><font size="2">
-AccountsHost(single, FirstHost)
-</font></pre>
-  </font>
-</ul>
-<p>The settings defined in <b>AccountsHost</b>, define the logical mapping database 
-  access type on the initial access. <b>AccountsHost</b> specifies the access 
-  type and uses login information previously given in the <a href="#FirstHost"><b>FirstHost</b></a> 
-  label (in the <a href="#Physical"><b>physical</b></a> section). Table 3 shows 
-  the values in <b>AccountsHost</b>.</p>
+                          <ul>
+                            <table border="0" cellspacing="4" cellpadding="4" width="80%">
+                              <tfoot><font class="P"><b>Table 2:</b> AccountsHostRetry Definitions</font></tfoot>
+                              <th bgcolor="#e0e0e0" width="10%"><p>Field</p></th>
+                              <th bgcolor="#e0e0e0"width="30%"><p>Value in Example</p></th>
+                              <th bgcolor="#e0e0e0" width="60%"><p>Purpose</p></th>
+                              <tr>
+                                <td align="center" valign="top">
+                                  <p>1</p>
+                                </td>
+                                <td align="left" valign="top">
+                                  <font   face="Courier New, Courier">Sequential</font>
+                                </td>
+                                <td align="left" valign="top">
+                                  <p>Defines the access type.</p>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center" valign="top">
+                                  <p>2</p>
+                                </td>
+                                <td align="left" valign="top">
+                                  <font   face="Courier New, Courier">FirstHost</font>
+                                </td>
+                                <td align="left" valign="top">
+                                  <p>Defines the primary physical database topology.</p>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center" valign="top">
+                                  <p>3</p>
+                                </td>
+                                <td align="left" valign="top">
+                                  <font   face="Courier New, Courier">EverythingElseHost</font>
+                                </td>
+                                <td align="left" valign="top">
+                                  <p>Defines the secondary physical database topology.</p>
+                                </td>
+                              </tr>
+                            </table>
+                          </ul>
 
-<ul>
-  <table border="0" cellspacing="4" cellpadding="4" width="80%">
-    <tfoot><font class="P"><b>Table 3:</b> AccountsHost Definitions</font></tfoot>
-    <th bgcolor="#e0e0e0" width="10%"><p>Field</p></th>
-    <th bgcolor="#e0e0e0"width="30%"><p>Value in Example</p></th>
-    <th bgcolor="#e0e0e0" width="60%"><p>Purpose</p></th>
-  <tr>
-    <td align="center" valign="top">
-      <p>1</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">Single</font>
-    </td>
-    <td align="left" valign="top">
-      <p>Define the access type.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <p>2</p>
-    </td>
-    <td align="left" valign="top">
-      <font   face="Courier New, Courier">FirstHost</font>
-    </td>
-    <td align="left" valign="top">
-      <p>Defines the physical database topology.</p>
-    </td>
-  </tr>
-  </table>
-</ul>
+                          <!-- ********** Header 4 ******************** -->
+                          <p><b> <a name="AccountsHost">The AccountsHost Label</a> </b></p>
+                          <ul>
+                            <font   face="Courier New, Courier">
+                              <pre><font size="2">
+                                AccountsHost(single, FirstHost)
+                              </font></pre>
+                            </font>
+                          </ul>
+                          <p>The settings defined in <b>AccountsHost</b>, define the logical mapping database
+                            access type on the initial access. <b>AccountsHost</b> specifies the access
+                            type and uses login information previously given in the <a href="#FirstHost"><b>FirstHost</b></a>
+                            label (in the <a href="#Physical"><b>physical</b></a> section). Table 3 shows
+                            the values in <b>AccountsHost</b>.</p>
 
-<!-- ********** Header 4 ******************** -->
-<p><b> <a name="Default">The Default Label</a> </b></p>
-<ul>
-  <font   face="Courier New, Courier">
-  <pre><font size="2">Default(Single, EverythingElseHost)
-</font></pre>
-  </font>
-</ul>
-<p>The settings defined in <b>default</b> establish the default logical database 
-  mapping. The purposes of the individual settings and are the same as those for 
-  <a href="#AccountsHost"><b>AccountsHost</b></a>. The <b>Default</b> label sets 
-  the access type and then uses login values specified in the <a href="#EverythingElseHost"><b>EverythingElseHost</b></a> 
-  label (defined previously in the <a href="#Physical"><b>physical</b></a> section).</p>
+                            <ul>
+                              <table border="0" cellspacing="4" cellpadding="4" width="80%">
+                                <tfoot><font class="P"><b>Table 3:</b> AccountsHost Definitions</font></tfoot>
+                                <th bgcolor="#e0e0e0" width="10%"><p>Field</p></th>
+                                <th bgcolor="#e0e0e0"width="30%"><p>Value in Example</p></th>
+                                <th bgcolor="#e0e0e0" width="60%"><p>Purpose</p></th>
+                                <tr>
+                                  <td align="center" valign="top">
+                                    <p>1</p>
+                                  </td>
+                                  <td align="left" valign="top">
+                                    <font   face="Courier New, Courier">Single</font>
+                                  </td>
+                                  <td align="left" valign="top">
+                                    <p>Define the access type.</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td align="center" valign="top">
+                                    <p>2</p>
+                                  </td>
+                                  <td align="left" valign="top">
+                                    <font   face="Courier New, Courier">FirstHost</font>
+                                  </td>
+                                  <td align="left" valign="top">
+                                    <p>Defines the physical database topology.</p>
+                                  </td>
+                                </tr>
+                              </table>
+                            </ul>
 
-<!-- ********** Header 2 ******************** -->
-<p></p><hr><font class="subhead2">
-<a NAME="checkfile">Verifying the Values in configHosts.txt</a>
-</font>
+                            <!-- ********** Header 4 ******************** -->
+                            <p><b> <a name="Default">The Default Label</a> </b></p>
+                            <ul>
+                              <font   face="Courier New, Courier">
+                                <pre><font size="2">Default(Single, EverythingElseHost)
+                                </font></pre>
+                              </font>
+                            </ul>
+                            <p>The settings defined in <b>default</b> establish the default logical database
+                              mapping. The purposes of the individual settings and are the same as those for
+                              <a href="#AccountsHost"><b>AccountsHost</b></a>. The <b>Default</b> label sets
+                              the access type and then uses login values specified in the <a href="#EverythingElseHost"><b>EverythingElseHost</b></a>
+                              label (defined previously in the <a href="#Physical"><b>physical</b></a> section).</p>
 
-<p>To verify that the settings in configHosts.txt are valid, use SQL*Plus to
-execute two commands using the settings. If the settings are correct, the
-commands result in a successful connection to the database.</p>
+                              <!-- ********** Header 2 ******************** -->
+                              <p></p><hr><font class="subhead2">
+                              <a NAME="checkfile">Verifying the Values in configHosts.txt</a>
+                            </font>
 
-<p>The first command tests the values defined in <a href="#FirstHost">
-<b>FirstHost</b></a> (of the <a href="#Physical"><b>physical</b></a> section).
-Following the example used in this article, the <b>FirstHost</b> line from
-configHosts.txt is:</p>
+                            <p>To verify that the settings in configHosts.txt are valid, use SQL*Plus to
+                              execute two commands using the settings. If the settings are correct, the
+                              commands result in a successful connection to the database.</p>
 
-<ul><font   face="Courier New, Courier"><pre>FirstHost(e119_staging_acc, e119_staging_acc, acc_test, retryCount=1, delay=0, reanimate=0)
-</pre></font></ul>
-    
-<p>The second command tests the values defined in the
-<a href="#EverythingElseHost"><b>EverythingElseHost</b></a> line:</p>
+                              <p>The first command tests the values defined in <a href="#FirstHost">
+                                <b>FirstHost</b></a> (of the <a href="#Physical"><b>physical</b></a> section).
+                                Following the example used in this article, the <b>FirstHost</b> line from
+                                configHosts.txt is:</p>
 
-<ul><font   face="Courier New, Courier"><pre>EverythingElseHost(e119_staging_main, e119_staging_main, bigfoot, retryCount=1, delay=2, reanimate=3)
-</pre></font></ul>
+                                <ul><font   face="Courier New, Courier"><pre>FirstHost(e119_staging_acc, e119_staging_acc, acc_test, retryCount=1, delay=0, reanimate=0)
+                                </pre></font></ul>
 
-<p>To execute the test commands, take the text between the parentheses of each 
-  line and construct SQL*Plus statements as follows:</p>
-<ul>
-  <font face="Courier New, Courier">
-  <pre><font size="2">sqlplus FirstField/SecondField@ThirdField
-</font></pre>
-  </font>
-</ul>
-<p>This translates to:</p>
-<ul>
-  <font   face="Courier New, Courier">
-  <pre><font size="2">sqlplus username/passwd@connect
-</font></pre>
-  </font>
-</ul>
-<p>So, given the example above, the SQL*Plus command should look like this:</p>
-<ul>
-  <font   face="Courier New, Courier">
-  <pre><font size="2">sqlplus e119_staging_acc/e119_staging_acc@acc_test
-</font></pre>
-  </font>
-</ul>
-<p>Execute the command twice, once using the first three fields from <b>FirstHost</b> 
-  and once with the same fields from <b>EverythingElseHost</b>. </p>
+                                <p>The second command tests the values defined in the
+                                  <a href="#EverythingElseHost"><b>EverythingElseHost</b></a> line:</p>
 
-<p>If the command fails to connect to the database, you have one of two
-problems:</p>
+                                  <ul><font   face="Courier New, Courier"><pre>EverythingElseHost(e119_staging_main, e119_staging_main, bigfoot, retryCount=1, delay=2, reanimate=3)
+                                  </pre></font></ul>
 
-<ol>
-    <li>Either or both username/password are incorrect.
-    <li>Or ebay.world is not set to point to the proper instance on the machine
-    you are testing on. This information is set in the tnsnames.ora file on the
-    machine.
-</ol>
+                                  <p>To execute the test commands, take the text between the parentheses of each
+                                    line and construct SQL*Plus statements as follows:</p>
+                                    <ul>
+                                      <font face="Courier New, Courier">
+                                        <pre><font size="2">sqlplus FirstField/SecondField@ThirdField
+                                        </font></pre>
+                                      </font>
+                                    </ul>
+                                    <p>This translates to:</p>
+                                    <ul>
+                                      <font   face="Courier New, Courier">
+                                        <pre><font size="2">sqlplus username/passwd@connect
+                                        </font></pre>
+                                      </font>
+                                    </ul>
+                                    <p>So, given the example above, the SQL*Plus command should look like this:</p>
+                                    <ul>
+                                      <font   face="Courier New, Courier">
+                                        <pre><font size="2">sqlplus e119_staging_acc/e119_staging_acc@acc_test
+                                        </font></pre>
+                                      </font>
+                                    </ul>
+                                    <p>Execute the command twice, once using the first three fields from <b>FirstHost</b>
+                                      and once with the same fields from <b>EverythingElseHost</b>. </p>
 
-<p>If the SQL*Plus connect commands work but your configHosts.txt still does
-not work, there are other problems with the configHosts.txt file.</p>
+                                      <p>If the command fails to connect to the database, you have one of two
+                                        problems:</p>
 
-<!-- ********** Header 2 ******************** -->
-<p></p><hr><font class="subhead2">
-<a name="TechnicalContact">Technical Contact</a>
-</font>
+                                        <ol>
+                                          <li>Either or both username/password are incorrect.
+                                            <li>Or ebay.world is not set to point to the proper instance on the machine
+                                              you are testing on. This information is set in the tnsnames.ora file on the
+                                              machine.
+                                            </ol>
 
-<p>The technical information for the update to this article was provided by 
-<a href="ConfigHostsDef.htm">***Name Omitted***</a>.</p>
+                                            <p>If the SQL*Plus connect commands work but your configHosts.txt still does
+                                              not work, there are other problems with the configHosts.txt file.</p>
 
-<p>Product Development's
-<a href="ConfigHostsDef.htm">Technical Publications team</a> is
-responsible for maintaining this page. This HTML document was updated by
-<a href="mailto:ffwhite@live.com">Forest White</a>.</p>
+                                              <!-- ********** Header 2 ******************** -->
+                                              <p></p><hr><font class="subhead2">
+                                              <a name="TechnicalContact">Technical Contact</a>
+                                            </font>
 
-</body>
- </html>
+                                            <p>The technical information for the update to this article was provided by
+                                              <a href="ConfigHostsDef.htm">***Name Omitted***</a>.</p>
+
+                                              <p>Product Development's
+                                                <a href="ConfigHostsDef.htm">Technical Publications team</a> is
+                                                responsible for maintaining this page. This HTML document was updated by
+                                                <a href="mailto:ffwhite@live.com">Forest White</a>.</p>
+
+                                              </body>
+                                              </html>
